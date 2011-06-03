@@ -7,11 +7,36 @@
 //
 
 #import "RootViewController.h"
+#import "AlbumsViewController.h"
+#import <MediaPlayer/MediaPlayer.h>
 
 @implementation RootViewController
 
+@synthesize artists;
+
 - (void)viewDidLoad
 {
+    self.title = @"My Music";
+    NSLog(@"Logging items from a generic query...");  
+    
+    MPMediaQuery *query = [[MPMediaQuery alloc] init];
+    [query setGroupingType:MPMediaGroupingArtist];
+    NSArray *collections = [query collections];
+
+    NSMutableArray *tmp = [[NSMutableArray alloc] init];
+
+    for (MPMediaItemCollection *media in collections){
+        MPMediaItem *item = [media representativeItem];
+        if ([[item valueForProperty:MPMediaItemPropertyMediaType] isEqualToNumber:[NSNumber numberWithInt:MPMediaTypeMusic]]){
+            NSString *artistName = [item valueForProperty:MPMediaItemPropertyArtist];
+            NSLog(@"Artist name: %@",[item valueForProperty:MPMediaItemPropertyArtist]);
+            [tmp addObject:artistName];
+        }
+    }
+    self.artists = tmp;
+    
+    [tmp release];
+    NSLog(@"List of artists %@", self.artists);
     [super viewDidLoad];
 }
 
@@ -51,7 +76,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 0;
+    return [self.artists count];
 }
 
 // Customize the appearance of table view cells.
@@ -65,6 +90,13 @@
     }
 
     // Configure the cell.
+    NSUInteger row = [indexPath row];
+    NSLog(@"Row %d", row);
+    NSLog(@"Filling cell with %@", [self.artists objectAtIndex:row]);
+
+    cell.textLabel.text = [self.artists objectAtIndex:row];
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+
     return cell;
 }
 
@@ -111,14 +143,20 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    /*
-    <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
+    
+    AlbumsViewController *albumsViewController = [[AlbumsViewController alloc] init];
+    albumsViewController.artist = [self.artists objectAtIndex:[indexPath row]];
     // ...
     // Pass the selected object to the new view controller.
-    [self.navigationController pushViewController:detailViewController animated:YES];
-    [detailViewController release];
-	*/
+    [self.navigationController pushViewController:albumsViewController animated:YES];
+    [albumsViewController release];
 }
+
+/*
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    cell.backgroundColor = [UIColor redColor];
+}
+*/
 
 - (void)didReceiveMemoryWarning
 {

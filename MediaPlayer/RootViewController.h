@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MediaPlayer/MediaPlayer.h>
 
 @interface RootViewController : UITableViewController {
-
+    NSArray *artists;
 }
 
-
+@property (nonatomic, retain) NSArray *artists;
 @end

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D07A00BB13988637009B43D4 /* AlbumsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D07A00BA13988637009B43D4 /* AlbumsViewController.m */; };
 		D09A95C11395B01B0021BD52 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D09A95C01395B01B0021BD52 /* UIKit.framework */; };
 		D09A95C31395B01B0021BD52 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D09A95C21395B01B0021BD52 /* Foundation.framework */; };
 		D09A95C51395B01B0021BD52 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D09A95C41395B01B0021BD52 /* CoreGraphics.framework */; };
@@ -16,23 +17,27 @@
 		D09A95D41395B01B0021BD52 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = D09A95D21395B01B0021BD52 /* MainWindow.xib */; };
 		D09A95D71395B01B0021BD52 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D09A95D61395B01B0021BD52 /* RootViewController.m */; };
 		D09A95DA1395B01B0021BD52 /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D09A95D81395B01B0021BD52 /* RootViewController.xib */; };
+		D09A95E11395B0EC0021BD52 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D09A95E01395B0EC0021BD52 /* MediaPlayer.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D07A00B913988637009B43D4 /* AlbumsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlbumsViewController.h; sourceTree = "<group>"; };
+		D07A00BA13988637009B43D4 /* AlbumsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlbumsViewController.m; sourceTree = "<group>"; };
 		D09A95BC1395B01B0021BD52 /* MediaPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MediaPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D09A95C01395B01B0021BD52 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		D09A95C21395B01B0021BD52 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D09A95C41395B01B0021BD52 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		D09A95C81395B01B0021BD52 /* MediaPlayer-Info.plist */ = {isa = PBXFileReference; path = "MediaPlayer-Info.plist"; sourceTree = "<group>"; };
+		D09A95C81395B01B0021BD52 /* MediaPlayer-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MediaPlayer-Info.plist"; sourceTree = "<group>"; };
 		D09A95CA1395B01B0021BD52 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		D09A95CC1395B01B0021BD52 /* MediaPlayer-Prefix.pch */ = {isa = PBXFileReference; path = "MediaPlayer-Prefix.pch"; sourceTree = "<group>"; };
+		D09A95CC1395B01B0021BD52 /* MediaPlayer-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MediaPlayer-Prefix.pch"; sourceTree = "<group>"; };
 		D09A95CD1395B01B0021BD52 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		D09A95CF1395B01B0021BD52 /* MediaPlayerAppDelegate.h */ = {isa = PBXFileReference; path = MediaPlayerAppDelegate.h; sourceTree = "<group>"; };
+		D09A95CF1395B01B0021BD52 /* MediaPlayerAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MediaPlayerAppDelegate.h; sourceTree = "<group>"; };
 		D09A95D01395B01B0021BD52 /* MediaPlayerAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MediaPlayerAppDelegate.m; sourceTree = "<group>"; };
 		D09A95D31395B01B0021BD52 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
-		D09A95D51395B01B0021BD52 /* RootViewController.h */ = {isa = PBXFileReference; path = RootViewController.h; sourceTree = "<group>"; };
+		D09A95D51395B01B0021BD52 /* RootViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
 		D09A95D61395B01B0021BD52 /* RootViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
 		D09A95D91395B01B0021BD52 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/RootViewController.xib; sourceTree = "<group>"; };
+		D09A95E01395B0EC0021BD52 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,6 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D09A95E11395B0EC0021BD52 /* MediaPlayer.framework in Frameworks */,
 				D09A95C11395B01B0021BD52 /* UIKit.framework in Frameworks */,
 				D09A95C31395B01B0021BD52 /* Foundation.framework in Frameworks */,
 				D09A95C51395B01B0021BD52 /* CoreGraphics.framework in Frameworks */,
@@ -69,6 +75,7 @@
 		D09A95BF1395B01B0021BD52 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D09A95E01395B0EC0021BD52 /* MediaPlayer.framework */,
 				D09A95C01395B01B0021BD52 /* UIKit.framework */,
 				D09A95C21395B01B0021BD52 /* Foundation.framework */,
 				D09A95C41395B01B0021BD52 /* CoreGraphics.framework */,
@@ -86,6 +93,8 @@
 				D09A95D61395B01B0021BD52 /* RootViewController.m */,
 				D09A95D81395B01B0021BD52 /* RootViewController.xib */,
 				D09A95C71395B01B0021BD52 /* Supporting Files */,
+				D07A00B913988637009B43D4 /* AlbumsViewController.h */,
+				D07A00BA13988637009B43D4 /* AlbumsViewController.m */,
 			);
 			path = MediaPlayer;
 			sourceTree = "<group>";
@@ -167,6 +176,7 @@
 				D09A95CE1395B01B0021BD52 /* main.m in Sources */,
 				D09A95D11395B01B0021BD52 /* MediaPlayerAppDelegate.m in Sources */,
 				D09A95D71395B01B0021BD52 /* RootViewController.m in Sources */,
+				D07A00BB13988637009B43D4 /* AlbumsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -279,6 +289,7 @@
 				D09A95DF1395B01B0021BD52 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
