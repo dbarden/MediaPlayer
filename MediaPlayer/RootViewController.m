@@ -8,6 +8,7 @@
 
 #import "RootViewController.h"
 #import "AlbumsViewController.h"
+#import "Artist.h"
 #import <MediaPlayer/MediaPlayer.h>
 
 @implementation RootViewController
@@ -17,8 +18,8 @@
 - (void)viewDidLoad
 {
     self.title = @"My Music";
-    NSLog(@"Logging items from a generic query...");  
-    
+
+    //Gets the Artists presents and creates an array
     MPMediaQuery *query = [[MPMediaQuery alloc] init];
     [query setGroupingType:MPMediaGroupingArtist];
     NSArray *collections = [query collections];
@@ -28,15 +29,15 @@
     for (MPMediaItemCollection *media in collections){
         MPMediaItem *item = [media representativeItem];
         if ([[item valueForProperty:MPMediaItemPropertyMediaType] isEqualToNumber:[NSNumber numberWithInt:MPMediaTypeMusic]]){
-            NSString *artistName = [item valueForProperty:MPMediaItemPropertyArtist];
-            NSLog(@"Artist name: %@",[item valueForProperty:MPMediaItemPropertyArtist]);
-            [tmp addObject:artistName];
+            Artist *artist = [[Artist alloc] init];
+            artist.name = [item valueForProperty:MPMediaItemPropertyArtist];
+            [tmp addObject:artist];
+            [artist release];
         }
     }
-    self.artists = tmp;
+    self.artists = [self prepareData:tmp];
     
     [tmp release];
-    NSLog(@"List of artists %@", self.artists);
     [super viewDidLoad];
 }
 
@@ -71,31 +72,55 @@
 // Customize the number of sections in the table view.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return [[self.artists allKeys] count];
+}
+
+- (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    NSArray *keys = [[self.artists allKeys] sortedArrayUsingSelector:@selector(compare:)];
+    int title = [[keys objectAtIndex:section] intValue]+65;
+    
+    return [[[NSString alloc] initWithFormat:@"%c", title] autorelease];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.artists count];
+    NSArray *keys = [[self.artists allKeys] sortedArrayUsingSelector:@selector(compare:)];
+    NSNumber *key = [keys objectAtIndex:section];
+    
+    NSUInteger count = [[self.artists objectForKey:key] count];
+    return count;
+}
+
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
+{
+    return [[UILocalizedIndexedCollation currentCollation] sectionTitles];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index
+{
+    return [[UILocalizedIndexedCollation currentCollation] sectionForSectionIndexTitleAtIndex:index];
 }
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    
+
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
 
     // Configure the cell.
-    NSUInteger row = [indexPath row];
-    NSLog(@"Row %d", row);
-    NSLog(@"Filling cell with %@", [self.artists objectAtIndex:row]);
+    NSInteger row = [indexPath row];
 
-    cell.textLabel.text = [self.artists objectAtIndex:row];
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    NSArray *keys = [[self.artists allKeys] sortedArrayUsingSelector:@selector(compare:)];
+    NSNumber *key = [keys objectAtIndex:indexPath.section];
+    NSArray *array = [self.artists objectForKey:key];
+    
+    Artist *at = [array objectAtIndex:row];
+    cell.textLabel.text = [at name];
 
     return cell;
 }
@@ -143,13 +168,14 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+ /*   
     AlbumsViewController *albumsViewController = [[AlbumsViewController alloc] init];
     albumsViewController.artist = [self.artists objectAtIndex:[indexPath row]];
     // ...
     // Pass the selected object to the new view controller.
     [self.navigationController pushViewController:albumsViewController animated:YES];
     [albumsViewController release];
+  */
 }
 
 /*
@@ -179,4 +205,29 @@
     [super dealloc];
 }
 
+- (NSDictionary *)prepareData:(NSArray*)data{
+    NSMutableDictionary *tableData = [NSMutableDictionary dictionary];
+
+    UILocalizedIndexedCollation *indexer = [UILocalizedIndexedCollation currentCollation];
+    for (Artist *at in data){
+        NSInteger index = [indexer sectionForObject:at collationStringSelector:@selector(sortableName)];
+        NSNumber *key = [[NSNumber alloc] initWithInteger:index];
+        NSMutableArray *array = [tableData objectForKey:key];
+        
+        if (array == nil){
+            array = [NSMutableArray new];
+            [tableData setObject:array forKey:key];
+        }
+        [array addObject:at];
+        [key release];
+    }
+    
+    NSArray *keys = [tableData allKeys];
+    for (NSNumber *key in keys){
+        NSArray *array = [tableData objectForKey:key];
+        NSArray *sortedArray = [indexer sortedArrayFromArray:array collationStringSelector:@selector(sortableName)];
+        [tableData setObject:sortedArray forKey:key];
+    }
+    return tableData;
+}
 @end

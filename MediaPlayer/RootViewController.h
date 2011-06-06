@@ -10,8 +10,8 @@
 #import <MediaPlayer/MediaPlayer.h>
 
 @interface RootViewController : UITableViewController {
-    NSArray *artists;
+    NSDictionary *artists;
 }
 
-@property (nonatomic, retain) NSArray *artists;
+@property (nonatomic, retain) NSDictionary *artists;
 @end

@@ -18,6 +18,9 @@
 		D09A95D71395B01B0021BD52 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D09A95D61395B01B0021BD52 /* RootViewController.m */; };
 		D09A95DA1395B01B0021BD52 /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D09A95D81395B01B0021BD52 /* RootViewController.xib */; };
 		D09A95E11395B0EC0021BD52 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D09A95E01395B0EC0021BD52 /* MediaPlayer.framework */; };
+		D0FE2147139ABACB008E5123 /* Artist.m in Sources */ = {isa = PBXBuildFile; fileRef = D0FE2146139ABACB008E5123 /* Artist.m */; };
+		D0FE214C139ABAFA008E5123 /* Album.m in Sources */ = {isa = PBXBuildFile; fileRef = D0FE214B139ABAFA008E5123 /* Album.m */; };
+		D0FE214F139ABB06008E5123 /* Track.m in Sources */ = {isa = PBXBuildFile; fileRef = D0FE214E139ABB06008E5123 /* Track.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +41,12 @@
 		D09A95D61395B01B0021BD52 /* RootViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
 		D09A95D91395B01B0021BD52 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/RootViewController.xib; sourceTree = "<group>"; };
 		D09A95E01395B0EC0021BD52 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		D0FE2145139ABACB008E5123 /* Artist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Artist.h; sourceTree = "<group>"; };
+		D0FE2146139ABACB008E5123 /* Artist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Artist.m; sourceTree = "<group>"; };
+		D0FE214A139ABAFA008E5123 /* Album.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Album.h; sourceTree = "<group>"; };
+		D0FE214B139ABAFA008E5123 /* Album.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Album.m; sourceTree = "<group>"; };
+		D0FE214D139ABB06008E5123 /* Track.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Track.h; sourceTree = "<group>"; };
+		D0FE214E139ABB06008E5123 /* Track.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Track.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +95,7 @@
 		D09A95C61395B01B0021BD52 /* MediaPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				D0FE2149139ABADE008E5123 /* Artist Info */,
 				D09A95CF1395B01B0021BD52 /* MediaPlayerAppDelegate.h */,
 				D09A95D01395B01B0021BD52 /* MediaPlayerAppDelegate.m */,
 				D09A95D21395B01B0021BD52 /* MainWindow.xib */,
@@ -108,6 +118,19 @@
 				D09A95CD1395B01B0021BD52 /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D0FE2149139ABADE008E5123 /* Artist Info */ = {
+			isa = PBXGroup;
+			children = (
+				D0FE2145139ABACB008E5123 /* Artist.h */,
+				D0FE2146139ABACB008E5123 /* Artist.m */,
+				D0FE214A139ABAFA008E5123 /* Album.h */,
+				D0FE214B139ABAFA008E5123 /* Album.m */,
+				D0FE214D139ABB06008E5123 /* Track.h */,
+				D0FE214E139ABB06008E5123 /* Track.m */,
+			);
+			name = "Artist Info";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -177,6 +200,9 @@
 				D09A95D11395B01B0021BD52 /* MediaPlayerAppDelegate.m in Sources */,
 				D09A95D71395B01B0021BD52 /* RootViewController.m in Sources */,
 				D07A00BB13988637009B43D4 /* AlbumsViewController.m in Sources */,
+				D0FE2147139ABACB008E5123 /* Artist.m in Sources */,
+				D0FE214C139ABAFA008E5123 /* Album.m in Sources */,
+				D0FE214F139ABB06008E5123 /* Track.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
