@@ -12,6 +12,9 @@
 @implementation Artist
 
 @synthesize name=_name;
+@synthesize mbid=_mbid;
+@synthesize thumbs=_thumbs;
+@synthesize smallImageThumb=_smallImageThumb;
 
 - (void) dealloc
 {
