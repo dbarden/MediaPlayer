@@ -9,19 +9,18 @@
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import "DownloadManager.h"
+#import "MBProgressHUD.h"
 
 #define kCoverKey 1
 #define kNameKey 2
 
 @interface RootViewController : UITableViewController <DownloadManagerDelegate> {
     NSDictionary *_artists;
-    
     DownloadManager *_downloadManager;
+    MBProgressHUD *hud;
 }
 
 @property (nonatomic, retain) NSDictionary *artists;
 @property (nonatomic, retain) DownloadManager *downloadManager;
 
-- (NSDictionary *)prepareData:(NSArray*)data;
-- (void)didFinishArtistDownload:(Artist *)artist forIndexPath:(NSIndexPath *)indexPath;
 @end

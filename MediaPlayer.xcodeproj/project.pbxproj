@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		D02EB137139F1482007686B2 /* DownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D02EB136139F1481007686B2 /* DownloadManager.m */; };
+		D040016713AA08E0003EE0AE /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = D040016613AA08DF003EE0AE /* MBProgressHUD.m */; };
 		D04DE86913A0A66D00832507 /* NSObject+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = D04DE85713A0A66D00832507 /* NSObject+JSON.m */; };
 		D04DE86A13A0A66D00832507 /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = D04DE85A13A0A66D00832507 /* SBJsonParser.m */; };
 		D04DE86B13A0A66D00832507 /* SBJsonStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = D04DE85C13A0A66D00832507 /* SBJsonStreamParser.m */; };
@@ -50,6 +51,8 @@
 /* Begin PBXFileReference section */
 		D02EB135139F1481007686B2 /* DownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadManager.h; sourceTree = "<group>"; };
 		D02EB136139F1481007686B2 /* DownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadManager.m; sourceTree = "<group>"; };
+		D040016513AA08DF003EE0AE /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		D040016613AA08DF003EE0AE /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		D04DE85513A0A66D00832507 /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
 		D04DE85613A0A66D00832507 /* NSObject+JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+JSON.h"; sourceTree = "<group>"; };
 		D04DE85713A0A66D00832507 /* NSObject+JSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+JSON.m"; sourceTree = "<group>"; };
@@ -141,6 +144,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D040016913AA08E4003EE0AE /* MBProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				D040016513AA08DF003EE0AE /* MBProgressHUD.h */,
+				D040016613AA08DF003EE0AE /* MBProgressHUD.m */,
+			);
+			name = MBProgressHUD;
+			sourceTree = "<group>";
+		};
 		D04DE85313A0A60D00832507 /* SBJson */ = {
 			isa = PBXGroup;
 			children = (
@@ -203,6 +215,7 @@
 		D09A95C61395B01B0021BD52 /* MediaPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				D040016913AA08E4003EE0AE /* MBProgressHUD */,
 				D04DE85313A0A60D00832507 /* SBJson */,
 				D0EAF014139F863F005CD2FD /* asihttp */,
 				D0FE2149139ABADE008E5123 /* Artist Info */,
@@ -366,6 +379,7 @@
 				D04DE86F13A0A66D00832507 /* SBJsonStreamWriterState.m in Sources */,
 				D04DE87013A0A66D00832507 /* SBJsonTokeniser.m in Sources */,
 				D04DE87113A0A66D00832507 /* SBJsonWriter.m in Sources */,
+				D040016713AA08E0003EE0AE /* MBProgressHUD.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

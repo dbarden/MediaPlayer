@@ -11,9 +11,10 @@
 
 @implementation DownloadManager
 
-@synthesize queue=_queue;
-@synthesize delegate=_delegate;
-@synthesize artistIndexPathDict=_artistiIndexPathDict;
+@synthesize infoQueue = _infoQueue;
+@synthesize imageQueue = _imageQueue;
+@synthesize delegate = _delegate;
+@synthesize artistIndexPathDict = _artistIndexPathDict;
 
 - (id)init
 {
@@ -22,53 +23,39 @@
         _activeDownload = [NSMutableData data];
         _artistIndexPathDict = [[NSMutableDictionary alloc] init];
         
-        ASINetworkQueue *tmpQueue = [[ASINetworkQueue alloc] init];
-        [tmpQueue setDelegate:self];
-        [tmpQueue setShouldCancelAllRequestsOnFailure:NO];
-        [tmpQueue setRequestDidFailSelector:@selector(didRequestFailed:)];
-        [tmpQueue setRequestDidFinishSelector:@selector(didRequestFinished:)];
-        [tmpQueue setQueueDidFinishSelector:@selector(queueFinished:)];
-        self.queue = tmpQueue;
-        [tmpQueue release];
+        ASINetworkQueue *tmpInfoQueue = [[ASINetworkQueue alloc] init];
+        [tmpInfoQueue setDelegate:self];
+        [tmpInfoQueue setShouldCancelAllRequestsOnFailure:NO];
+        [tmpInfoQueue setRequestDidFailSelector:@selector(didRequestFailed:)];
+        [tmpInfoQueue setRequestDidFinishSelector:@selector(didRequestFinished:)];
+        [tmpInfoQueue setQueueDidFinishSelector:@selector(infoQueueFinished:)];
+        self.infoQueue = tmpInfoQueue;
+        [tmpInfoQueue release];
+        
+        ASINetworkQueue *tmpImageQueue = [[ASINetworkQueue alloc] init];
+        [tmpImageQueue setDelegate:self];
+        [tmpImageQueue setShouldCancelAllRequestsOnFailure:NO];
+        [tmpImageQueue setRequestDidFailSelector:@selector(didRequestFailed:)];
+        [tmpImageQueue setRequestDidFinishSelector:@selector(didRequestFinished:)];
+        [tmpImageQueue setQueueDidFinishSelector:@selector(imageQueueFinished:)];
+        self.imageQueue = tmpImageQueue;
+        [tmpImageQueue release];
+
     }
     
     return self;
 }
-- (NSString *)encodeIndexPath:(NSIndexPath *)indexPath
+
+- (void)dealloc
 {
-    NSUInteger row = [indexPath row];
-    NSUInteger section = [indexPath section];
-    NSString *indexPathStr = [NSString stringWithFormat:@"%d_%d", section, row];
-    return indexPathStr;
+    [_activeDownload release];
+    [_artistIndexPathDict removeAllObjects];
+    [_artistIndexPathDict release];
+    [super dealloc];
 }
 
-- (void)downloadArtistInfo:(Artist *)artist withIndexPath:(NSIndexPath *)indexPath
-{
-    static NSString *LastFMAPIKey = @"1ec0d3d1928d823fb7a58440c1d6ca65";
-    NSString *searchString = [artist.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSLog(@"SearchString %@", searchString);
-    NSURL *url = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"http://ws.audioscrobbler.com/2.0/?method=artist.search&artist=%@&api_key=%@&format=json", searchString, LastFMAPIKey]];
-    
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-    [request setDelegate:self];
-    
-    NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:@"artist", @"type", @"info", @"phase", indexPath, @"indexPath", nil];
-
-    [_artistIndexPathDict setObject:artist forKey:[self encodeIndexPath:indexPath]];
-    NSLog(@"Hash %@, %@", [self encodeIndexPath:indexPath], _artistIndexPathDict);
-    request.userInfo = dict;
-    [dict release];
-    
-    [self.queue addOperation:request];
-    [self.queue go];
-    
-}
-
-- (void)downloadAlbumInfo:(Album *)album
-{
-    
-}
-
+#pragma mark -
+#pragma mark ASIHTTP Delegate Methods
 ///////////////////////////////////////////////////////////////////
 - (void)didRequestFinished:(ASIHTTPRequest*)request
 {
@@ -102,28 +89,62 @@
 }
 
 ///////////////////////////////////////////////////////////////////
-- (void)queueFinished:(ASINetworkQueue *)queue
+- (void)infoQueueFinished:(ASINetworkQueue *)queue
 {
+    NSArray *artists = [self.infoQueue.userInfo objectForKey:@"artists"];
+    [_delegate didDownloadArtistQueue:artists];
+	NSLog(@"Info Queue finished");
+}
 
-	NSLog(@"Queue finished");
+- (void)imageQueueFinished:(ASINetworkQueue *)queue
+{
+    
+	NSLog(@"Image Queue finished");
+}
+
+#pragma mark -
+#pragma mark Album Methods
+- (void)downloadAlbumInfo:(Album *)album
+{
+    
+}
+
+#pragma mark -
+#pragma mark Artists Methods
+- (void)downloadArtistInfo:(NSArray *)artists;
+{
+    static NSString *LastFMAPIKey = @"1ec0d3d1928d823fb7a58440c1d6ca65";
+    for (Artist *artist in artists){
+        NSString *searchString = [artist.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSLog(@"SearchString %@", searchString);
+        NSURL *url = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"http://ws.audioscrobbler.com/2.0/?method=artist.getInfo&artist=%@&api_key=%@&format=json&autocorrect=1", searchString, LastFMAPIKey]];
+        
+        ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+        [request setDelegate:self];
+        
+        NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:@"artist", @"type", @"info", @"phase", artist, @"artist", nil];
+        request.userInfo = dict;
+        [dict release];
+        
+        [self.infoQueue addOperation:request];
+    }
+    NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:artists, @"artists", nil];
+    self.infoQueue.userInfo = dict;
+    [self.infoQueue go];
+    
 }
 
 //Receives the data and formats into jso and downloads the artist image
 - (void)processArtistInfo:(ASIHTTPRequest *)request
 {
-    NSIndexPath *indexPath = [request.userInfo objectForKey:@"indexPath"];
-    Artist *artist = [_artistIndexPathDict objectForKey:[self encodeIndexPath:indexPath]];
+    Artist *artist = [request.userInfo objectForKey:@"artist"];
     NSLog(@"Artist Name %@", artist.name);
     
     NSString *responseString = [request responseString];
-    NSDictionary *responseDict = [[[responseString JSONValue] objectForKey:@"results"] objectForKey:@"artistmatches"];
-    NSDictionary *artistDict;
-    if ([[responseDict objectForKey:@"artist"] isKindOfClass:[NSArray class]])
-        artistDict = [[responseDict objectForKey:@"artist"] objectAtIndex:0];
-    else
-        artistDict = [responseDict objectForKey:@"artist"];
+    NSDictionary *artistDict = [[responseString JSONValue] objectForKey:@"artist"];
     
     artist.mbid = [artistDict objectForKey:@"mbid"];
+    artist.name = [artistDict objectForKey:@"name"];
 
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     for (NSDictionary *image in [artistDict objectForKey:@"image"]){
@@ -132,18 +153,21 @@
     artist.thumbs = dict;
     [dict release];
     
-    //Triggers the image download
+}
+
+- (void)downloadArtistThumb:(Artist *)artist withIndexPath:(NSIndexPath *)indexPath {
     NSURL *url = [[NSURL alloc] initWithString:[artist.thumbs objectForKey:@"medium"]];
     
-    ASIHTTPRequest *imageRequest = [ASIHTTPRequest requestWithURL:url];
-    [imageRequest setDelegate:self];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    [request setDelegate:self];
     
-    NSDictionary *userInfoDict = [[NSDictionary alloc] initWithObjectsAndKeys:@"artist", @"type", @"image", @"phase", indexPath, @"indexPath", nil];
-    imageRequest.userInfo = userInfoDict;
-    [userInfoDict release];
+    NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:@"artist", @"type", @"image", @"phase", artist, @"artist", indexPath, @"indexPath", nil];
+    request.userInfo = dict;
+    [dict release];
     
-    [[self queue] addOperation:imageRequest];
-    [self.queue go];
+    [self.imageQueue addOperation:request];
+    [self.imageQueue go];
+
 }
 
 - (void)processArtistThumbImage:(ASIHTTPRequest *)request
@@ -151,9 +175,19 @@
     NSLog(@"Got here");
     
     NSIndexPath *indexPath = [request.userInfo objectForKey:@"indexPath"];
-    Artist *artist = [_artistIndexPathDict objectForKey:[self encodeIndexPath:indexPath]];
+    Artist *artist = [request.userInfo objectForKey:@"artist"];
     artist.smallImageThumb = [UIImage imageWithData:[request rawResponseData]];
-    [_delegate didFinishArtistDownload:artist forIndexPath:indexPath];
-//    [_artistIndexPathDict removeObjectForKey:[self encodeIndexPath:indexPath]];    
+    [_delegate didDownloadArtistThumb:artist forIndexPath:indexPath];
 }
+
+#pragma mark -
+#pragma mark Helper methods
+- (NSString *)encodeIndexPath:(NSIndexPath *)indexPath
+{
+    NSUInteger row = [indexPath row];
+    NSUInteger section = [indexPath section];
+    NSString *indexPathStr = [NSString stringWithFormat:@"%d_%d", section, row];
+    return indexPathStr;
+}
+
 @end

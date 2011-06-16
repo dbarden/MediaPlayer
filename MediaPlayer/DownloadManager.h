@@ -23,21 +23,30 @@
     NSURLConnection *_connection;
     NSMutableDictionary *_artistIndexPathDict;
     
-    ASINetworkQueue *_queue;
+    ASINetworkQueue *_infoQueue;
+    ASINetworkQueue *_imageQueue;
 }
 
-@property (nonatomic, retain) ASINetworkQueue *queue;
+@property (nonatomic, retain) ASINetworkQueue *infoQueue;
+@property (nonatomic, retain) ASINetworkQueue *imageQueue;
 @property (nonatomic, retain) id <DownloadManagerDelegate> delegate;
 @property (nonatomic, retain) NSMutableDictionary *artistIndexPathDict;
 
+- (void)downloadArtistInfo:(NSArray *)artists;
+- (void)downloadAlbumInfo:(Album*)album;
+- (void)downloadArtistThumb:(Artist *)artist withIndexPath:(NSIndexPath *)indexPath;
 - (void)processArtistInfo:(ASIHTTPRequest*)request;
 - (void)processArtistThumbImage:(ASIHTTPRequest *)request;
-- (void)downloadArtistInfo:(Artist*)artist withIndexPath:(NSIndexPath *)artistIndexPath;
-- (void)downloadAlbumInfo:(Album*)album;
+
+
+- (NSString *)encodeIndexPath:(NSIndexPath *)indexPath;
 
 @end
 
 @protocol DownloadManagerDelegate
+@optional
 
-- (void)didFinishArtistDownload:(Artist *)artist forIndexPath:(NSIndexPath *)indexPath;
+- (void)didDownloadArtistQueue:(NSArray *)artists;
+- (void)didDownloadArtistThumb:(Artist *)artist forIndexPath:(NSIndexPath *)indexPath;
+
 @end

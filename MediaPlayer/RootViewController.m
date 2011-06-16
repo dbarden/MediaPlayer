@@ -25,56 +25,17 @@
     manager.delegate = self;
     self.downloadManager = manager;
     [manager release];
-    
-    //Gets the Artists presents and creates an array
-    MPMediaQuery *query = [[MPMediaQuery alloc] init];
-    [query setGroupingType:MPMediaGroupingArtist];
-    NSArray *collections = [query collections];
+    NSMutableArray *tmp = [[self getArtistsFromLibrary] retain];
 
-    NSMutableArray *tmp = [[NSMutableArray alloc] init];
-
-    for (MPMediaItemCollection *media in collections){
-        MPMediaItem *item = [media representativeItem];
-        if ([[item valueForProperty:MPMediaItemPropertyMediaType] isEqualToNumber:[NSNumber numberWithInt:MPMediaTypeMusic]]){
-            Artist *artist = [[Artist alloc] init];
-            artist.name = [item valueForProperty:MPMediaItemPropertyArtist];
-            [tmp addObject:artist];
-            [artist release];
-        }
-    }
-    self.artists = [self prepareData:tmp];
+    [_downloadManager downloadArtistInfo:tmp];
     
     [tmp release];
+    hud = [[MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES] retain];
+    hud.labelText =@"Loading...";
     [super viewDidLoad];
 }
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-- (NSDictionary *)prepareData:(NSArray*)data{
-    NSMutableDictionary *tableData = [NSMutableDictionary dictionary];
-    
-    UILocalizedIndexedCollation *indexer = [UILocalizedIndexedCollation currentCollation];
-    for (Artist *at in data){
-        NSInteger index = [indexer sectionForObject:at collationStringSelector:@selector(sortableName)];
-        NSNumber *key = [[NSNumber alloc] initWithInteger:index];
-        NSMutableArray *array = [tableData objectForKey:key];
-        
-        if (array == nil){
-            array = [NSMutableArray new];
-            [tableData setObject:array forKey:key];
-        }
-        [array addObject:at];
-        [key release];
-    }
-    
-    NSArray *keys = [tableData allKeys];
-    for (NSNumber *key in keys){
-        NSArray *array = [tableData objectForKey:key];
-        NSArray *sortedArray = [indexer sortedArrayFromArray:array collationStringSelector:@selector(sortableName)];
-        [tableData setObject:sortedArray forKey:key];
-    }
-    return tableData;
-}
-
+#pragma mark -
+#pragma Lifecycle Management
 ///////////////////////////////////////////////////////////////////////////////////////////////
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -99,6 +60,8 @@
 	[super viewDidDisappear:animated];
 }
 
+#pragma mark -
+#pragma TableViewDelegate Methods
 ///////////////////////////////////////////////////////////////////////////////////////////////
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -173,7 +136,7 @@
     if (at.smallImageThumb == nil){
         cellImageView.image = [UIImage imageNamed:@"Placeholder.png"];
         
-        [_downloadManager downloadArtistInfo:at withIndexPath:indexPath];
+        [_downloadManager downloadArtistThumb:at withIndexPath:indexPath];
     } else {
         cellImageView.image = at.smallImageThumb;
     }
@@ -184,12 +147,72 @@
     return cell;
 }
 
+#pragma mark -
+#pragma mark DownloadManager delegate Methods
 ///////////////////////////////////////////////////////////////////////////////////////////////
-- (void)didFinishArtistDownload:(Artist *)artist forIndexPath:(NSIndexPath *)indexPath
+- (void)didDownloadArtistThumb:(Artist *)artist forIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
     NSLog(@"Cell %@", cell.textLabel.text);
     UIImageView *imgView = (UIImageView *)[cell viewWithTag:kCoverKey];
     imgView.image = artist.smallImageThumb;
+}
+
+- (NSMutableArray *)getArtistsFromLibrary
+{
+    //Gets the Artists presents and creates an array
+    MPMediaQuery *query = [[MPMediaQuery alloc] init];
+    [query setGroupingType:MPMediaGroupingArtist];
+    NSArray *collections = [query collections];
+    
+    NSMutableArray *tmp = [[[NSMutableArray alloc] init] autorelease];;
+    
+    for (MPMediaItemCollection *media in collections){
+        MPMediaItem *item = [media representativeItem];
+        if ([[item valueForProperty:MPMediaItemPropertyMediaType] isEqualToNumber:[NSNumber numberWithInt:MPMediaTypeMusic]]){
+            Artist *artist = [[Artist alloc] init];
+            artist.name = [item valueForProperty:MPMediaItemPropertyArtist];
+            [tmp addObject:artist];
+            [artist release];
+        }
+    }
+    return tmp;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+- (void)didDownloadArtistQueue:(NSArray *)artists
+{
+    self.artists =[self verifyData:artists];
+	[hud hide:YES];
+    [self.tableView reloadData];
+}
+
+#pragma mark -
+#pragma mark Helper Methods
+///////////////////////////////////////////////////////////////////////////////////////////////
+- (NSDictionary *)verifyData:(NSArray*)data{
+    NSMutableDictionary *tableData = [NSMutableDictionary dictionary];
+    
+    UILocalizedIndexedCollation *indexer = [UILocalizedIndexedCollation currentCollation];
+    for (Artist *at in data){
+        NSInteger index = [indexer sectionForObject:at collationStringSelector:@selector(sortableName)];
+        NSNumber *key = [[NSNumber alloc] initWithInteger:index];
+        NSMutableArray *array = [tableData objectForKey:key];
+        
+        if (array == nil){
+            array = [NSMutableArray new];
+            [tableData setObject:array forKey:key];
+        }
+        [array addObject:at];
+        [key release];
+    }
+    
+    NSArray *keys = [tableData allKeys];
+    for (NSNumber *key in keys){
+        NSArray *array = [tableData objectForKey:key];
+        NSArray *sortedArray = [indexer sortedArrayFromArray:array collationStringSelector:@selector(sortableName)];
+        [tableData setObject:sortedArray forKey:key];
+    }
+    return tableData;
 }
 @end

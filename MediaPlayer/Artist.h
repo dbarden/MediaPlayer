@@ -13,8 +13,10 @@
     NSString *_name;
     NSString *_sortableName;
     NSString *_mbid;
+    NSString *_biography;
     NSDictionary *_thumbs;
     UIImage *_smallImageThumb;
+    
 }
 
 @property (nonatomic, copy) NSString *name;
